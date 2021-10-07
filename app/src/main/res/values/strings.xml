@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">SmartShoot</string>
+    <string name="game">Game</string>
+    <string name="menu">menu</string>
+    <string name="connect">Connect</string>
+    <string name="history">History</string>
+    <string name="settings">Settings</string>
+    <string name="start">Start</string>
+    <string name="email">Email</string>
+</resources>
