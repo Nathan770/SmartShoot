@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "628294021989",
+    "project_id": "smart-shoot-4800f",
+    "storage_bucket": "smart-shoot-4800f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:628294021989:android:2416d989b3de1e433ee78c",
+        "android_client_info": {
+          "package_name": "com.example.smartshoot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "628294021989-i58mmu9vjtbmhdvlfphthr3qqfpme02l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0jE4DpouEEOEAjiCpI4fHFHRitoFhebA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "628294021989-i58mmu9vjtbmhdvlfphthr3qqfpme02l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
