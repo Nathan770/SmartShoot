@@ -33,16 +33,82 @@
         <FrameLayout
             android:id="@+id/main_LAY_app"
             android:layout_width="match_parent"
-            android:layout_height="618dp"
-            android:layout_below="@id/main_TLB_title" />
+            android:layout_height="500dp"
+            android:layout_below="@id/main_TLB_title"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/main_BTN_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="150dp"
+            android:layout_marginTop="450dp"
+            android:text="Start"></com.google.android.material.button.MaterialButton>
+
+        <LinearLayout
+            android:id="@+id/firstliniar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_above="@+id/liniar">
+            <TextView
+                android:id="@+id/detecting_LBL_main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="Dectecting ..."></TextView>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/validateHoop_BTN_main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:text="Validate">
+
+            </com.google.android.material.button.MaterialButton>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/liniar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/main_BNV_menu"
+            android:layout_below="@+id/main_LAY_app"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/main_BTN_startHightlight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="Hightlight"
+                android:visibility="gone"></com.google.android.material.button.MaterialButton>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/main_BTN_stop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="STOP"
+                android:visibility="gone"></com.google.android.material.button.MaterialButton>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/main_BTN_startSpotlight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Spotlight "
+                android:visibility="gone"></com.google.android.material.button.MaterialButton>
+        </LinearLayout>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/main_BNV_menu"
             style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:menu="@menu/bottom_navigation_menu"
-            android:layout_alignParentBottom="true" />
+            android:layout_alignParentBottom="true"
+            app:menu="@menu/bottom_navigation_menu" />
 
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,10 +13,13 @@ import android.os.Bundle
 import android.util.Log
 import android.util.Size
 import android.view.Surface
+import android.view.View
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.chaquo.python.Python
 import com.example.smartshoot.CameraConnectionFragment
 import com.example.smartshoot.Fragment.ConnectFragment
 import com.example.smartshoot.Fragment.GameFragment
@@ -26,14 +29,46 @@ import com.example.smartshoot.R
 import com.example.smartshoot.Fragment.SettingFragment
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlin.math.log
+import com.google.android.material.button.MaterialButton
+import org.jcodec.api.SequenceEncoder
+import org.jcodec.api.android.AndroidSequenceEncoder
+import org.jcodec.common.io.FileChannelWrapper
+import org.jcodec.common.io.NIOUtils
+import org.jcodec.common.model.Rational
+import java.io.ByteArrayOutputStream
+import java.io.File
+import kotlin.collections.ArrayList
 
 @RequiresApi(Build.VERSION_CODES.KITKAT)
 class MainActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener {
     private val TAG = "MainActivity"
     private lateinit var main_BNV_menu: BottomNavigationView
     private lateinit var main_TLB_title: MaterialToolbar
+    private lateinit var main_BTN_start: MaterialButton
+    private lateinit var main_BTN_startHightlight: MaterialButton
+    private lateinit var main_BTN_stop: MaterialButton
+    private lateinit var main_BTN_startSpotlight: MaterialButton
+    private lateinit var validateHoop_BTN_main: MaterialButton
+    private lateinit var detecting_LBL_main: TextView
 
+    private var hoopfinded: Boolean = false
+    private var highlight: Boolean = false
+    private var spotlight: Boolean = false
+    private var isStoped: Boolean = false
+    private var shootDetected: Boolean = false
+    private var detectedFrame: Boolean = false
+    private val mFrames: ArrayList<Bitmap> = ArrayList<Bitmap>()
+    private val maxFps = 300
+    private val beforeSecond = 3
+    private val afterSecond = 2
+    private var unSpot = 30
+    private val fps = 30
+    private var counter = 0
+    private val py = Python.getInstance()
+    private val pyMoudle = py.getModule("API")
+    private lateinit var fragmentVideo: Fragment
+
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -54,27 +89,62 @@ class MainActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener {
         main_BNV_menu.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.page_game -> {
-                    changeFrag(fragmentManager, myFragmentGame , "Game")
+                    changeFrag(fragmentManager, myFragmentGame, "Game")
+                    //setFragment()
+                    //val data = py.getModule("API").callAttr("get_status")
+                    //Log.d("nathan", "onCreate ici : "+data)
                     true
                 }
                 R.id.page_connect -> {
-                    changeFrag(fragmentManager, myFragmentConnect , "Connect")
+                    changeFrag(fragmentManager, myFragmentConnect, "Connect")
                     true
                 }
                 R.id.page_history -> {
-                    changeFrag(fragmentManager, myFragmentHistory , "History")
+                    changeFrag(fragmentManager, myFragmentHistory, "History")
 
                     true
                 }
                 R.id.page_settings -> {
-                    changeFrag(fragmentManager, myFragmentSetting , "Setting")
+                    changeFrag(fragmentManager, myFragmentSetting, "Setting")
                     true
 
                 }
                 else -> false
             }
         }
+        main_BTN_start.setOnClickListener {
+            Log.d(TAG, "onCreate: main_BTN_find")
+            isStoped = false
+            setFragment()
+            main_BTN_startHightlight.visibility = View.VISIBLE
+            main_BTN_startSpotlight.visibility = View.VISIBLE
+            main_BTN_start.visibility = View.GONE
+            detecting_LBL_main.visibility = View.VISIBLE
+        }
+        main_BTN_startHightlight.setOnClickListener {
+            Log.d(TAG, "onCreate: main_BTN_startHightlight")
+            main_BTN_stop.visibility = View.VISIBLE
+            main_BTN_startHightlight.visibility = View.GONE
+            main_BTN_startSpotlight.visibility = View.GONE
+            highlight = true
+        }
+        main_BTN_startSpotlight.setOnClickListener {
+            main_BTN_stop.visibility = View.VISIBLE
+            main_BTN_startSpotlight.visibility = View.GONE
+            main_BTN_startHightlight.visibility = View.GONE
+            spotlight = true
+        }
+        main_BTN_stop.setOnClickListener {
+            isStoped = true
+            main_BTN_start.visibility = View.VISIBLE
+            main_BTN_stop.visibility = View.GONE
+        }
+        validateHoop_BTN_main.setOnClickListener {
+            hoopfinded = true
+            validateHoop_BTN_main.visibility = View.GONE
+            detecting_LBL_main.visibility = View.GONE
 
+        }
 
         //TODO ask for permission of camera upon first launch of application
         /*
@@ -98,7 +168,11 @@ class MainActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener {
 
     }
 
-    private fun changeFrag(fragmentManager: FragmentManager, myFragment: androidx.fragment.app.Fragment , fragName : String) {
+    private fun changeFrag(
+        fragmentManager: FragmentManager,
+        myFragment: androidx.fragment.app.Fragment,
+        fragName: String
+    ) {
         val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.main_LAY_app, myFragment)
             .addToBackStack(null)
@@ -110,6 +184,14 @@ class MainActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener {
     private fun findViews() {
         main_BNV_menu = findViewById(R.id.main_BNV_menu)
         main_TLB_title = findViewById(R.id.main_TLB_title)
+        main_BTN_start = findViewById(R.id.main_BTN_start)
+        main_BTN_startHightlight = findViewById(R.id.main_BTN_startHightlight)
+        main_BTN_stop = findViewById(R.id.main_BTN_stop)
+        main_BTN_startSpotlight = findViewById(R.id.main_BTN_startSpotlight)
+        validateHoop_BTN_main = findViewById(R.id.validateHoop_BTN_main)
+        detecting_LBL_main = findViewById(R.id.detecting_LBL_main)
+
+        val num = pyMoudle.callAttr("init")
     }
 
     override fun onRequestPermissionsResult(
@@ -133,6 +215,7 @@ class MainActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener {
     //fragment which show llive footage from camera
 
     protected fun setFragment() {
+
         val manager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
 
         var cameraId: String? = null
@@ -141,7 +224,7 @@ class MainActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        val fragment: Fragment
+
         val camera2Fragment = CameraConnectionFragment.newInstance(
             object :
                 CameraConnectionFragment.ConnectionCallback {
@@ -156,10 +239,15 @@ class MainActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener {
             R.layout.camera_fragment,
             Size(640, 480)
         )
-        camera2Fragment.setCamera(cameraId)
-        fragment = camera2Fragment
+        if (isStoped) {
+            camera2Fragment.onStop()
+        } else {
+            camera2Fragment.setCamera(cameraId)
+            fragmentVideo = camera2Fragment
+            fragmentManager.beginTransaction().replace(R.id.container, fragmentVideo).commit()
+        }
 
-        fragmentManager.beginTransaction().replace(R.id.container, fragment).commit()
+
     }
 
     protected fun getScreenOrientation(): Int {
@@ -179,6 +267,8 @@ class MainActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener {
     private var postInferenceCallback: Runnable? = null
     private var imageConverter: Runnable? = null
     private var rgbFrameBitmap: Bitmap? = null
+
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onImageAvailable(reader: ImageReader) {
         // We need wait until we have some size from onPreviewSizeChosen
         if (previewWidth == 0 || previewHeight == 0) {
@@ -196,7 +286,6 @@ class MainActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener {
             isProcessingFrame = true
             val planes = image.planes
             fillBytes(planes, yuvBytes)
-
             yRowStride = planes[0].rowStride
             val uvRowStride = planes[1].rowStride
             val uvPixelStride = planes[1].pixelStride
@@ -219,6 +308,7 @@ class MainActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener {
             }
             processImage()
         } catch (e: Exception) {
+            Log.d(TAG, "onImageAvailable: ", e)
             return
         }
     }
@@ -228,7 +318,107 @@ class MainActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener {
         imageConverter!!.run()
         rgbFrameBitmap = Bitmap.createBitmap(previewWidth, previewHeight, Bitmap.Config.ARGB_8888)
         rgbFrameBitmap?.setPixels(rgbBytes, 0, previewWidth, 0, 0, previewWidth, previewHeight)
+        val bitmap = rgbFrameBitmap
+        val stream = ByteArrayOutputStream()
+        bitmap?.compress(Bitmap.CompressFormat.PNG, 90, stream)
+        val image = stream.toByteArray()
+        if (!hoopfinded) {
+            val isHoopDetected = pyMoudle.callAttr("detect_hoop", image)
+            Log.d(TAG, "processImage: $isHoopDetected")
+            //val photoFromPython = pyMoudle.callAttr("get_frame")
+            //rgbFrameBitmap?.setPixels(photoFromPython?.toJava(IntArray::class.java) , 0, previewWidth, 0, 0, previewWidth, previewHeight)
+            if (isHoopDetected.toInt() == 1) {
+                //Show the frame from get_status
+                Log.d(TAG, "detected img finded:")
+                detectedFrame = true
+            }
+
+        } else {
+            if (highlight) {
+                // sent to highlights
+                if (mFrames.size == maxFps) {
+                    mFrames.removeAt(0)
+                }
+
+                mFrames.add(bitmap!!)
+                val mHighlight = pyMoudle.callAttr("highlights", image)
+                //Log.d(TAG, "processImage: highlights $mHighlight")
+                //rgbFrameBitmap?.setPixels(mHighlight?.toJava(IntArray::class.java) , 0, previewWidth, 0, 0, previewWidth, previewHeight)
+                val statusGame = pyMoudle.callAttr("get_status")
+                if (statusGame.toString() == "1" || shootDetected) {
+                    shootDetected = true
+                    counter = counter + 1
+
+                } else if (statusGame.toString() == "-1") {
+                    Log.d(TAG, "processImage: error")
+                }
+                if (counter == afterSecond * fps) {
+                    saveVideo(0)
+                }
+
+            }
+            if (spotlight) {
+                // sent to spotlight
+                val mSpotlight = pyMoudle.callAttr("spotlight", image)
+                Log.d(TAG, "processImage: spotlight $mSpotlight")
+                //rgbFrameBitmap?.setPixels(photoFromPython?.toJava(IntArray::class.java) , 0, previewWidth, 0, 0, previewWidth, previewHeight)
+                val statusGame = pyMoudle.callAttr("get_status")
+                if (statusGame.toInt() == 1){
+                    mFrames.add(bitmap!!)
+
+                }else {
+                    mFrames.add(bitmap!!)
+                    unSpot = unSpot + 1
+                    if (unSpot == (3 * fps)){
+                        if (mFrames.size >= (5 * fps)){
+                            saveVideo(1)
+                            mFrames.clear()
+                        }else{
+                            mFrames.clear()
+                        }
+                        unSpot = 0
+                    }
+
+                }
+            }
+        }
+
         postInferenceCallback!!.run()
+    }
+
+    private fun saveVideo(mode: Int) {
+        if (mode == 0){
+
+        }else{
+
+        }
+        var num = 0
+        if (mFrames.size - 1 - (beforeSecond * fps) < 0) {
+            num = 0
+
+        } else {
+            num = mFrames.size - 1 - (beforeSecond * fps)
+        }
+        var video = mFrames.subList(num, mFrames.size)
+
+        if (video.size > (afterSecond + beforeSecond) * fps * 0) {
+
+            val file: File = File("amitandnathantesting.mp4")
+            val out: FileChannelWrapper = NIOUtils.writableFileChannel(file.getAbsolutePath());
+
+            try {
+                val encoder: AndroidSequenceEncoder = AndroidSequenceEncoder(out, Rational.R(15, 1))
+                video.forEach { bitmap ->
+                    encoder.encodeImage(bitmap);
+                }
+                encoder.finish();
+                Log.d(TAG, "savedVideo: " + file.getAbsolutePath())
+            } finally {
+                NIOUtils.closeQuietly(out);
+            }
+        }
+        shootDetected = false
+        counter = 0
     }
 
     protected fun fillBytes(
@@ -244,6 +434,7 @@ class MainActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener {
             }
             buffer[yuvBytes[i]]
         }
+
     }
 
 

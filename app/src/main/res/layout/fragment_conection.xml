@@ -14,7 +14,7 @@
         android:id="@+id/con_BTN_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Send"/>
+        android:text=" Send "/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/con_BTN_receive"

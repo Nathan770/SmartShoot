@@ -11,4 +11,6 @@
     <string name="create_account">Create Account</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="play_with_friends">Play with friends</string>
+    <string name="player_detection">Player detection</string>
 </resources>

@@ -3,12 +3,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragment.GameFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+
+        tools:context="org.tensorflow.lite.examples.classification.CameraActivity"></FrameLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="game" />
+        android:orientation="vertical"
+        android:gravity="center">
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/game_btn_high"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="5dp"
+            app:cornerRadius="50dp"
+            android:visibility="gone"
+            android:text="start Highlights" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/textButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="5dp"
+            app:cornerRadius="50dp"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
+            android:text="start Spotlight" />
+
+
+    </LinearLayout>
 </FrameLayout>

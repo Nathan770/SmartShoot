@@ -6,14 +6,15 @@
         <entry key="../../../../layout/custom_preview.xml" value="0.109375" />
         <entry key="app/src/main/res/drawable/ic_login_wave.xml" value="0.10885416666666667" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.125" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.140625" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.1375" />
         <entry key="app/src/main/res/layout/camera_fragment.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_conection.xml" value="0.1358695652173913" />
         <entry key="app/src/main/res/layout/fragment_connect.xml" value="0.1358695652173913" />
-        <entry key="app/src/main/res/layout/fragment_game.xml" value="0.1358695652173913" />
+        <entry key="app/src/main/res/layout/fragment_game.xml" value="0.11" />
         <entry key="app/src/main/res/layout/fragment_history.xml" value="0.11875" />
-        <entry key="app/src/main/res/layout/fragment_setting.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/fragment_setting.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/video_card.xml" value="0.1" />
         <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.1578125" />
       </map>
     </option>

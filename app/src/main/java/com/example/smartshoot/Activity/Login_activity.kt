@@ -70,6 +70,7 @@ class Login_activity : AppCompatActivity(), EasyFormSubmitListener {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success")
                     val user = auth.currentUser
+                    reload()
 
                 } else {
                     // If sign in fails, display a message to the user.
