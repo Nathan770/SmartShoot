@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragment.ConnectFragment">
 
     <LinearLayout
@@ -15,11 +16,13 @@
             android:id="@+id/con_BTN_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:text=" Send "/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/con_BTN_receive"
             android:layout_width="wrap_content"
+            android:visibility="gone"
             android:layout_height="wrap_content"
             android:text="Receive"/>
 
@@ -27,13 +30,14 @@
             android:id="@+id/subscribe_switch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Discover nearby devices" />
+            android:text="Send files" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/publish_switch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Share device information" />
+            android:layout_marginTop="20dp"
+            android:text="Receive files" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/nearby_msg_recycler_view"

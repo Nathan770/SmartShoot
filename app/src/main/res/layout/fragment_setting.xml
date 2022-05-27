@@ -12,10 +12,13 @@
         android:gravity="center"
         android:orientation="vertical">
 
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="end"
+            android:gravity="start"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
             <TextView
@@ -23,47 +26,85 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="70dp"
                 android:textColor="@color/black"
-                android:text="Time of Highlights : "></TextView>
+                android:text="Record time before : "></TextView>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/settingTimeRecFrom"
-                android:layout_width="150dp"
+            <Spinner
+                android:id="@+id/spinner1"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="30 sec"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-                <AutoCompleteTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
+                />
 
         </LinearLayout>
 
-
-
-
-        <com.google.android.material.switchmaterial.SwitchMaterial
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/play_with_friends"/>
-        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:gravity="start"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="70dp"
+                android:textColor="@color/black"
+                android:text="Record time after : "></TextView>
+
+            <Spinner
+                android:id="@+id/spinner2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/player_detection"/>
+            android:gravity="start"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/editTextTextPersonName2"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="70dp"
+                android:textColor="@color/black"
+                android:text="Ball color : "></TextView>
+
+            <Spinner
+                android:id="@+id/spinner3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="enter the color of the t-shirt to follow" />
+            android:gravity="start"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="70dp"
+                android:textColor="@color/black"
+                android:text="Distinctive shirt color : "></TextView>
 
+            <Spinner
+                android:id="@+id/spinner4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                />
+
+        </LinearLayout>
 
     </LinearLayout>
 

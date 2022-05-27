@@ -11,7 +11,6 @@ def init():
 def detect_hoop(byte_array_frame) -> int:
     frame = game.convert_from_byte_array(byte_array_frame)
     status = game.detect_hoop(frame)
-    print(frame)
     return 1 if status else 0
 
 
@@ -28,7 +27,7 @@ def spotlight(byte_array_frame, color: str):
 
 
 def get_status():
-    status = game.get_status()
+    status = game.status
     # status_list = list(reduce(lambda x, y: x + y, status))
     # status_list = [str(element) for element in status_list]
     return status
@@ -36,3 +35,7 @@ def get_status():
 
 def get_frame():
     return game.get_status()['frame']
+
+
+def get_num_of_shots():
+    return game.num_of_shots
