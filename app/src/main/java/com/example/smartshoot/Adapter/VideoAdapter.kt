@@ -1,4 +1,4 @@
-package com.example.smartshoot
+package com.example.smartshoot.Adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +9,8 @@ import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.smartshoot.Object.VideoObj
+import com.example.smartshoot.R
 
 class VideoAdapter(private val all: ArrayList<VideoObj>, val fragment: Fragment) : RecyclerView.Adapter<VideoAdapter.ViewHolder>() {
     private val allVideo: ArrayList<VideoObj> = this.all

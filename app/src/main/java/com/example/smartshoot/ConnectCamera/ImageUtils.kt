@@ -1,4 +1,4 @@
-package com.example.smartshoot
+package com.example.smartshoot.ConnectCamera
 
 import android.graphics.Bitmap
 import android.os.Environment

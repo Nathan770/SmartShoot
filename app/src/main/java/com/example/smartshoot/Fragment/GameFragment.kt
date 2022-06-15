@@ -6,16 +6,13 @@ import android.hardware.camera2.CameraManager
 import android.media.Image
 import android.media.ImageReader
 import android.os.Bundle
-import android.util.Log
 import android.util.Size
 import android.view.LayoutInflater
 import android.view.Surface
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.fragment.app.Fragment
-import com.example.smartshoot.CameraConnectionFragment
-import com.example.smartshoot.ImageUtils
+import com.example.smartshoot.ConnectCamera.CameraConnectionFragment
+import com.example.smartshoot.ConnectCamera.ImageUtils
 import com.example.smartshoot.R
 import com.google.android.material.button.MaterialButton
 

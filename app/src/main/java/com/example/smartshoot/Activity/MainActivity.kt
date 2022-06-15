@@ -23,11 +23,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.chaquo.python.Python
-import com.example.smartshoot.CameraConnectionFragment
+import com.example.smartshoot.ConnectCamera.CameraConnectionFragment
 import com.example.smartshoot.Fragment.ConnectFragment
 import com.example.smartshoot.Fragment.GameFragment
 import com.example.smartshoot.Fragment.HistoryFragment
-import com.example.smartshoot.ImageUtils
+import com.example.smartshoot.ConnectCamera.ImageUtils
 import com.example.smartshoot.R
 import com.example.smartshoot.Fragment.SettingFragment
 import com.google.android.material.appbar.MaterialToolbar
@@ -36,7 +36,6 @@ import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import org.jcodec.api.SequenceEncoder
 import org.jcodec.api.android.AndroidSequenceEncoder
 import org.jcodec.common.io.FileChannelWrapper
 import org.jcodec.common.io.NIOUtils
@@ -44,9 +43,7 @@ import org.jcodec.common.model.Rational
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.util.*
-import java.util.concurrent.Semaphore
 import kotlin.collections.ArrayList
 
 @RequiresApi(Build.VERSION_CODES.KITKAT)
@@ -412,12 +409,13 @@ class MainActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener {
             Log.d(TAG, "processImage: " + statusGame)
             if (statusGame.toInt() == 1) {
                 mFrames.add(bitmap!!)
-
+                Log.d(TAG, "processImage: save bitmap")
             } else {
                 mFrames.add(bitmap!!)
                 unSpot = unSpot + 1
                 if (unSpot == (3 * fps)) {
-                    if (mFrames.size >= (5 * fps)) {
+                    if (mFrames.size >= (2 * fps)) {
+                        Log.d(TAG, "processImage: go to save")
                         saveVideo(1)
                         mFrames.clear()
                     } else {
@@ -445,6 +443,7 @@ class MainActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener {
     }
 
     private fun saveVideo(mode: Int) {
+        Log.d(TAG, "saveVideo: ")
         if (mode == 0) {
 
         } else {
@@ -460,8 +459,9 @@ class MainActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener {
         var video = mFrames.subList(num, mFrames.size)
 
         if (video.size > (afterSecond + beforeSecond) * fps * 0) {
-
-            val file: File = File("amitandnathantesting.mp4")
+            Log.d(TAG, "saveVideo: "+ video.size)
+            val file: File = File(this.filesDir.path.toString()+"/amitandnathantesting.mp4")
+            file.createNewFile()
             val out: FileChannelWrapper = NIOUtils.writableFileChannel(file.getAbsolutePath());
 
             try {

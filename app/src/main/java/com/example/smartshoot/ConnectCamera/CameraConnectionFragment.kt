@@ -1,4 +1,4 @@
-package com.example.smartshoot
+package com.example.smartshoot.ConnectCamera
 
 import android.Manifest
 import android.annotation.SuppressLint

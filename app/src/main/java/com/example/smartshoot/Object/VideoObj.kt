@@ -1,4 +1,4 @@
-package com.example.smartshoot
+package com.example.smartshoot.Object
 
 class VideoObj(name : String , date : String , time : String , photo : String) {
 

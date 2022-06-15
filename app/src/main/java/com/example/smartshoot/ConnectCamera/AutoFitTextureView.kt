@@ -1,4 +1,4 @@
-package com.example.smartshoot
+package com.example.smartshoot.ConnectCamera
 
 import android.content.Context
 import android.util.AttributeSet
